@@ -1,0 +1,115 @@
+{% extends 'engine/base.html' %} {% load crispy_forms_tags %}
+
+<!-- shows a paged view of the database's entries -->
+
+{% block title %}
+
+<title>Entries</title>
+
+{% endblock %}
+
+{% block content %}
+
+{% if status_code == 200 %}
+<div class="container">
+  <div class="row py-5">
+    <div class="col-lg-10 mx-auto">
+      <div class="card rounded-lg shadow-lg border-0">
+        <div class="card-body p-4 bg-dark rounded">
+          <div class="btn-group">
+            {% with first_entry=entries|first last_entry=entries|last %}
+            <!-- prev/next only displayed if prev and/or next page actually exist -->
+            {% if prev_page %}
+            <a
+              href="/list-entries/?page={{ page }}&prev=1"
+              class="btn btn-primary btn-block"
+            >
+              Previous page
+            </a>
+            {% endif %} 
+            {% if next_page %}
+            <a
+              href="/list-entries/?page={{ page }}&prev=0"
+              class="btn btn-primary btn-block"
+            >
+             Next page
+            </a>
+            {% endif %}
+            {% endwith %}
+          </div>
+
+          <hr class="my-2" />
+          <div class="table-responsive">
+            <table
+              id="list-all-entries-table"
+              class="table text-white text-center"
+            >
+              <thead>
+                <tr>
+                  <td scope="col">
+                    <h6><b>#</b></h6>
+                  </td>
+                  <td scope="col">
+                    <h6><b>Title</b></h6>
+                  </td>
+                  <td scope="col">
+                    <h6><b>Placeholder</b></h6>
+                  </td>
+                  <td scope="col">
+                    <h6><b>Placeholder</b></h6>
+                  </td>
+                  <td scope="col">
+                    <h6><b>Placeholder</b></h6>
+                  </td>
+                </tr>
+              </thead>
+              <tbody>
+                {% for entry in entries %}
+                <tr>
+                  <td>{{ entry.id }}</td>
+                  <td><i>{{ entry.title }}</i></td>
+                  <!-- TODO: also need a button to go to a specific entry here -->
+                  <!-- <td>
+                    <a
+                      href="/display-entry/?id={{ paper.id }}"
+                      class="btn-sm btn-info"
+                    >
+                     Consultar
+                    </a>
+                  </td>
+                  </td> -->
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% else %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-sm-8 text-center">
+      <div class="alert alert-danger" role="alert">
+        <h1 class="alert-heading">
+          An error occurred while retrieving the entries.
+        </h1>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container py-2">
+  <div class="row justify-content-center">
+    <div class="col-sm-6 text-center">
+      <div class="card-deck">
+        {% include 'engine/back-home.html' %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+{% endblock %}

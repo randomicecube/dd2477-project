@@ -1,0 +1,12 @@
+numpy
+pandas
+scipy
+seaborn
+scikit-learn
+jupyter
+matplotlib
+pip
+django
+requests
+django-crispy-forms
+django-crispy-bootstrap4

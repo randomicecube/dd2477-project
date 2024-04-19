@@ -1,0 +1,62 @@
+{% extends 'engine/base.html' %} {% load crispy_forms_tags %}
+
+<!-- homepage -->
+
+{% block title %}
+
+<title>DD2477 Search Engine</title>
+
+{% endblock %} 
+
+{% block content %}
+
+{% if user.is_authenticated %}
+
+<!-- TODO: have somewhere written what the current logged in user is + log out button there -->
+
+<div
+  style="background: var(--background) !important"
+  class="jumbotron center-content-screen"
+  id="home-page-content"
+>
+<!-- source the magnifying glass icon from font-awesome, <i class="fa-solid fa-magnifying-glass"></i> -->
+  <!-- <img
+    alt="Magnifying glass Icon"
+    id="magnifying-icon"
+  /> -->
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <hr class="my-6" />
+  <h1 class="display-4">Welcome to our search engine!</h1>
+  <hr class="my-2" />
+  <p class="lead">
+    Here you'll be able to search for some stuff which we don't know about yet!
+  </p>
+
+  <hr class="my-4" />
+
+  <div class="card-deck">
+    <div class="card bg-dark text-center">
+      <div class="card-body">
+        <h4 class="card-title"><b>Search</b></h4>
+        <p class="card-text">Search for entries!</p>
+        <a
+          href="/list-entries"
+          class="btn btn-primary"
+          data-toggle="modal"
+          data-target="#ModalSearchEntries"
+          >Search</a
+        >
+        {% include 'engine/forms/search-entries.html' with form=form %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% else %}
+
+<p>You are not logged in</p>
+<a href="{% url 'login' %}">Log In</a>
+
+{% endif %}
+
+{% endblock %}
