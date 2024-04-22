@@ -42,6 +42,25 @@
   {% endblock %} {% block body %}
   <body>
     {% block content %} {% endblock %}
+    <footer class="footer">
+      <div style="margin-left: 20px">
+        <span>
+          {% if user.is_authenticated %}
+            Logged in as {{ user.username }}!
+          {% endif %}
+        </span>
+      </div>
+      {% if user.is_authenticated %}
+        <div style="position: relative; float: right; margin-right: 20px; bottom: 40px;">
+          <span>
+            <form action="{% url 'logout' %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-primary">Log out</button>
+            </form>
+          </span>
+        </div>
+      {% endif %}
+    </footer>
   </body>
   {% endblock %}
 </html>
