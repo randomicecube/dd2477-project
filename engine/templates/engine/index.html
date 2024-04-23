@@ -12,18 +12,11 @@
 
 {% if user.is_authenticated %}
 
-<!-- TODO: have somewhere written what the current logged in user is + log out button there -->
-
 <div
   style="background: var(--background) !important"
   class="jumbotron center-content-screen"
   id="home-page-content"
 >
-<!-- source the magnifying glass icon from font-awesome, <i class="fa-solid fa-magnifying-glass"></i> -->
-  <!-- <img
-    alt="Magnifying glass Icon"
-    id="magnifying-icon"
-  /> -->
   <i class="fa-solid fa-magnifying-glass"></i>
   <hr class="my-6" />
   <h1 class="display-4">Welcome to our search engine!</h1>
@@ -34,20 +27,18 @@
 
   <hr class="my-4" />
 
-  <div class="card-deck">
-    <div class="card bg-dark text-center">
-      <div class="card-body">
-        <h4 class="card-title"><b>Search</b></h4>
-        <p class="card-text">Search for entries!</p>
-        <a
-          href="/list-entries"
-          class="btn btn-primary"
-          data-toggle="modal"
-          data-target="#ModalSearchEntries"
-          >Search</a
-        >
-        {% include 'engine/forms/search-entries.html' with form=form %}
-      </div>
+  <div class="card bg-dark text-center">
+    <div class="card-body">
+      <h4 class="card-title"><b>Search</b></h4>
+      <p class="card-text">Search for entries!</p>
+      <a
+        href="/list-entries"
+        class="btn btn-primary"
+        data-toggle="modal"
+        data-target="#ModalSearchEntries"
+        >Search</a
+      >
+      {% include 'engine/forms/search-entries.html' with form=form %}
     </div>
   </div>
 </div>
