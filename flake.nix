@@ -17,6 +17,7 @@
       devShell.x86_64-linux = pkgs.mkShell {
         buildInputs = with pkgs; [
           (pkgs.python3.withPackages pythonPackages)
+          sqlite
         ];
       };
     };
