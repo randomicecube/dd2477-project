@@ -25,3 +25,4 @@ replay_pid*
 
 __pycache__/
 db.sqlite3
+venv
