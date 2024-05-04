@@ -12,6 +12,7 @@
       pythonPackages = p: with p; [
           numpy pandas scipy seaborn scikit-learn jupyter matplotlib pip
           django requests django-crispy-forms django-crispy-bootstrap4
+          elasticsearch tabulate elastic-transport
         ];
     in {
       devShell.x86_64-linux = pkgs.mkShell {

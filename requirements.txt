@@ -10,3 +10,6 @@ django
 requests
 django-crispy-forms
 crispy-bootstrap4
+elasticsearch
+tabulate
+elastic-transport

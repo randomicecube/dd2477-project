@@ -1,12 +1,23 @@
 from django.shortcuts import render
-import requests, os
-from .forms import SearchForm
-from django.http import HttpRequest
+from django.http import HttpRequest, JsonResponse
 from django.conf import settings
+from .forms import SearchForm
+from utils.ElasticSearch import create_elasticsearch_client, create_index, index_news_articles
+from utils.search import build_query
+from utils.sqlitedb import save_user_profile, load_user_profile
+import requests, os
 
-ENTRIES_ENDPOINT = os.getenv('ENTRIES_ENDPOINT') # TODO: make this something
 
-PAGE_SIZE = 10
+DATA_FILE = "data/News_Category_Dataset_v3.json"
+
+client = create_elasticsearch_client()
+index_name = "news_articles"
+
+create_index(client, index_name)
+
+# In server mode, we always index the news articles
+index_news_articles(client, index_name, DATA_FILE)
+
 
 def index(request):
   """
@@ -19,64 +30,52 @@ def index(request):
 def list_entries(request):
   """
   Renders the entries which match the search query
-  TODO: still a placeholder, for the time being
   """
   # Get the query from the form
   form = SearchForm(request.GET)
   if not form.is_valid():
     return render(request, 'engine/index.html', {
-      'form': form
+      'form': SearchForm(),
     })
 
   query = form.cleaned_data['query']
+  query_type = form.cleaned_data['query_type']
 
-  # TODO: this is a placeholder, it's here that some of the connection between frontend and backend will happen
-  # Get the entries from the API
-  response = requests.get(ENTRIES_ENDPOINT, params={
-    'query': query,
-    'page_size': PAGE_SIZE
-  })
+  # Log the search query
+  username = request.user.username
+  profile = load_user_profile(username)
+  profile.add_search_query(query)
 
-  # Check if the request was successful
-  if response.status_code != 200:
-    return render(request, 'engine/index.html', {
-      'form': form,
-      'error': 'Failed to get entries from the API'
-    })
+  query = build_query(query_type, query)
 
+  # Personalize the query based on user profile
+  query = profile.personalize_search(query)
+
+  # Perform the search
+  response = client.search(index=index_name, body=query)
   # Get the entries from the response
-  entries = response.json()
+  entries = response['hits']['hits']
 
-  return render(request, 'engine/list_entries.html', {
-    'form': form,
+  save_user_profile(profile)
+
+  # Do something with them -- have the query type into account with regards with the ordering
+  return render(request, 'engine/list-entries.html', {
     'entries': entries
   })
 
-def display_entry(request):
+def log_entry_click(request):
   """
-  Renders a specific entry
-  # TODO: how do we identify it? filename? I don't think there's an ID
+  When a user clicks on an entry (i.e., expands a row), we want to log that event
   """
-
-  # NOTE: for the time being, as a placeholder, we'll just use the filename
-  filename = request.GET.get('filename')
-  if not filename:
-    return render(request, 'engine/index.html', {
-      'form': SearchForm(),
-      'error': 'No filename provided'
-    })
-
-  # Get the entry from the API
-  response = requests.get(ENTRIES_ENDPOINT + filename)
-
-  # Check if the request was successful
-  if response.status_code != 200:
-    return render(request, 'engine/index.html', {
-      'form': SearchForm(),
-      'error': 'Failed to get entry from the API'
-    })
-
-  return render(request, 'engine/display-entry.html', {
-    'entry': response.json(),
-    'form': SearchForm()
-  })
+  if request.method == 'POST' and request.is_ajax():
+      entry_id = request.POST.get('entry_id')
+      
+      clicked_category = request.POST.get('clicked_category')
+      username = request.user.username
+      profile = load_user_profile(username)
+      profile.add_click_history(clicked_category)
+      save_user_profile(profile)
+      
+      return JsonResponse({'success': True})
+  else:
+      return JsonResponse({'success': False})
