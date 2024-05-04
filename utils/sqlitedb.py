@@ -2,6 +2,7 @@
 import sqlite3  # SQLite3 library for handling database operations
 import json  # JSON library for serialization and deserialization of data
 from utils.UserProfile import UserProfile  # Importing the UserProfile class that defines the structure of user profile objects
+import os
 
 # Function to create a SQLite database and initialize the user_profiles table
 def create_db():
