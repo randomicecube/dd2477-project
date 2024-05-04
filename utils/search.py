@@ -1,47 +1,43 @@
 def build_query(query_type, term):
     # Build a query based on search type and term
-    query = {
-        "query": {
-            "bool": {
-                "must": [],
-                "should": [] # TODO: check if this ends up being used
-            }
-        }
-    }
-
-    # TODO: change single to ranked (?)
-    if query_type == "single":
-        query['query']['bool']['must'].append({"match": {"content": term}})
-    elif query_type == "intersection":
-        terms = term.split(" ")
-        for t in terms:
-            query['query']['bool']['must'].append({"match": {"content": t}})
+    if query_type == "intersection":
+        # Construct query for intersection search
+        query = construct_intersection_query(term)
     elif query_type == "phrase":
-        query['query'] = {"match_phrase": {"content": term}}
-
+        # Construct query for phrase search
+        query = construct_phrase_query(term)
     return query
 
-def search_intersection(client, index, terms):
-    # Search for an intersection of multiple terms within an index
-    must_clauses = [{"match": {"content": term}} for term in terms]
+
+def construct_intersection_query(terms):
+    # Constructing the list of must clauses for intersection search
+    must_clauses = [{"multi_match": {"query": term, "fields": ["headline", "short_description"]}} for term in terms.split()]
+
+    # Constructing the query object
     query = {
         "query": {
             "bool": {
-                "must": must_clauses
+                "must": must_clauses,
+                "should": []  # Empty list for should clause
             }
         }
     }
-    return client.search(index=index, body=query)
+    return query
 
-def search_phrase(client, index, phrase):
-    # Search for an exact phrase within an index
+
+def construct_phrase_query(terms):
+    # Construct query for phrase search
     query = {
         "query": {
-            "match_phrase": {
-                "content": phrase
+            "bool": {
+                "must": [
+                    {"match_phrase": {"headline": terms}},
+                    {"match_phrase": {"short_description": terms}}
+                ],
+                "should": []  # Empty list for should clause
             }
         }
     }
-    return client.search(index=index, body=query)
+    return query
 
 # TODO: add search_ranked?

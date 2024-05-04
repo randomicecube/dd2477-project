@@ -61,9 +61,9 @@ def main():
     keep_searching = True
     while keep_searching:
         # TODO: change this to intersection/phrase/ranked
-        query_type = input("Enter search type (single/intersection/phrase): ")
-        if query_type not in ['single', 'intersection', 'phrase']:
-            print("Invalid search type! Please input one of 'single', 'intersection', or 'phrase'.")
+        query_type = input("Enter search type (intersection/phrase): ")
+        if query_type not in ['intersection', 'phrase']:
+            print("Invalid search type! Please input one of 'intersection', or 'phrase'.")
             continue
 
         term = input("Enter term(s) to search: ")
