@@ -1,6 +1,9 @@
 from elasticsearch import Elasticsearch, exceptions, helpers
 import json
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 ELASTIC_PASSWORD = os.getenv("ELASTIC_PASSWORD")
 HTTP_CA_PATH = "utils/http_ca.crt"
@@ -9,7 +12,7 @@ def create_elasticsearch_client():
     return Elasticsearch(
         hosts="https://localhost:9200/",
         basic_auth=["elastic", ELASTIC_PASSWORD], # Authentication credentials
-        verify_certs=True, # SSL certificate verification
+        verify_certs=False, # SSL certificate verification
         ca_certs=HTTP_CA_PATH, # Path to the certificate file
         # timeout=30, # Connection timeout in seconds
     )

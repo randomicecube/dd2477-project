@@ -1,0 +1,24 @@
+version: "3.4"
+  
+services:
+  elasticsearch:
+    container_name: elasticsearch
+    image: elasticsearch:8.7.1
+    ports:
+      - 9200:9200
+    environment:
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPT=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+  
+  kibana:
+    container_name: kibana
+    image: kibana:8.7.1
+    environment:
+      - "ELASTICSEARCH_HOST=http://elasticsearch:9200"
+    ports:
+      - 5601:5601

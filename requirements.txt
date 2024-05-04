@@ -13,3 +13,4 @@ crispy-bootstrap4
 elasticsearch
 tabulate
 elastic-transport
+python-dotenv

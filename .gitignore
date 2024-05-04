@@ -28,3 +28,7 @@ db.sqlite3
 
 http_ca.crt
 *.db
+
+venv
+.python-version
+.env
