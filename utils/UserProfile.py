@@ -32,24 +32,30 @@ class UserProfile:
 
     # Method to personalize a search query based on the user's preferences
     def personalize_search(self, query):
+        def generate_boost_factors(n, first_step):
+            # Generate a list of boost factors based on the number of categories
+            step = (first_step - 1) / (n - 1) if n > 1 else 0
+            return [first_step - i * step for i in range(n)]
+
         # Boost categories in the search query based on the user's category preferences
         if self.category_preferences:
             # Get top 3 categories based on preference count
-            top_categories = sorted(self.category_preferences, key=self.category_preferences.get, reverse=True)[:3]
+            TOP_CAT_COUNT = 3
+            top_categories = sorted(self.category_preferences, key=self.category_preferences.get, reverse=True)[:TOP_CAT_COUNT]
             # Create boost clauses for these categories
-            # TODO: check if 2 is a good boost value
-            category_should_clauses = [{"match": {"category": {"query": cat, "boost": 2}}} for cat in top_categories]
+            boost_factors = generate_boost_factors(TOP_CAT_COUNT, 2)
+            category_should_clauses = [{"match": {"category": {"query": cat, "boost": boost_factors[i]}}} for i, cat in enumerate(top_categories)]
             # Add these clauses to the search query
             query['query']['bool']['should'] += category_should_clauses
         
         # Boost terms in the search query based on the user's term preferences
         if self.term_preferences:
             # Get top 5 terms based on frequency of use
-            # TODO: check if this is a good strategy for boosting terms
-            top_terms = sorted(self.term_preferences, key=self.term_preferences.get, reverse=True)[:5]
+            TOP_TERM_COUNT = 15
+            top_terms = sorted(self.term_preferences, key=self.term_preferences.get, reverse=True)[:TOP_TERM_COUNT]
             # Create boost clauses for these terms
-            # TODO: check if 1.5 is a good boost value
-            term_should_clauses = [{"match": {"headline": {"query": term, "boost": 1.5}}} for term in top_terms]
+            boost_factors = generate_boost_factors(TOP_TERM_COUNT, 1.5)
+            term_should_clauses = [{"match": {field: {"query": term, "boost": boost_factors[i]}}} for i, term in enumerate(top_terms) for field in ['headline', 'short_description']]
             # Add these clauses to the search query
             query['query']['bool']['should'] += term_should_clauses
 
