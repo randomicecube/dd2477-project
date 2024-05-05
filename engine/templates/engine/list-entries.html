@@ -1,4 +1,4 @@
-{% extends 'engine/base.html' %}
+{% extends 'engine/base.html' %} {% load filters %}
 
 <!-- shows a paged view of the database's entries -->
 
@@ -9,8 +9,6 @@
 {% endblock %}
 
 {% block content %}
-
-{% if status_code == 200 %}
 <div class="container">
   <div class="row py-5">
     <div class="col-lg-10 mx-auto">
@@ -23,7 +21,7 @@
           </div>
           <div class="accordion" id="accordionExample">
             {% for entry in entries %}
-            <div class="accordion-item entry-row" data-entry-category="{{ entry['_source']['category'] }}" data-entry-id="{{ entry['_id'] }}">
+            <div class="accordion-item entry-row" data-entry-category="{{ entry|get:'_source'|get:'category' }}" data-entry-id="{{ entry|get:'_id' }}">
               <h2 class="accordion-header" id="heading{{ forloop.counter }}">
                 <button
                   class="accordion-button"
@@ -33,7 +31,7 @@
                   aria-expanded="true"
                   aria-controls="collapse{{ forloop.counter }}"
                 >
-                  {{ entry._source.headline }}
+                  {{ entry|get:'_source'|get:'headline' }}
                 </button>
               </h2>
               <div
@@ -42,11 +40,11 @@
                 aria-labelledby="heading{{ forloop.counter }}"
                 data-bs-parent="#accordionExample"
               >
-                <p><strong>Category:</strong> {{ entry._source.category }}</p>
-                <p><strong>Authors:</strong> {{ entry._source.authors }}</p>
-                <p><strong>Short Description:</strong> {{ entry._source.short_description }}</p>
-                <p><strong>Date:</strong> {{ entry._source.date }}</p>
-                <p><a href="{{ entry.link }}">Read More</a></p>
+                <p><strong>Category:</strong> {{ entry|get:'_source'|get:'category' }}</p>
+                <p><strong>Authors:</strong> {{ entry|get:'_source'|get:'authors' }}</p>
+                <p><strong>Short Description:</strong> {{ entry|get:'_source'|get:'short_description' }}</p>
+                <p><strong>Date:</strong> {{ entry|get:'_source'|get:'date' }}</p>
+                <p><a href="{{ entry|get:'link' }}">Read More</a></p>
               </div>
             </div>
             {% endfor %}
@@ -56,28 +54,4 @@
     </div>
   </div>
 </div>
-{% else %}
-<div class="container py-5">
-  <div class="row justify-content-center">
-    <div class="col-sm-8 text-center">
-      <div class="alert alert-danger" role="alert">
-        <h1 class="alert-heading">
-          An error occurred while retrieving the entries.
-        </h1>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="container py-2">
-  <div class="row justify-content-center">
-    <div class="col-sm-6 text-center">
-      <div class="card-deck">
-        {% include 'engine/back-home.html' %}
-      </div>
-    </div>
-  </div>
-</div>
-{% endif %}
-
 {% endblock %}
