@@ -51,7 +51,7 @@ class UserProfile:
         # Boost terms in the search query based on the user's term preferences
         if self.term_preferences:
             # Get top 5 terms based on frequency of use
-            TOP_TERM_COUNT = 15
+            TOP_TERM_COUNT = 10
             top_terms = sorted(self.term_preferences, key=self.term_preferences.get, reverse=True)[:TOP_TERM_COUNT]
             # Create boost clauses for these terms
             boost_factors = generate_boost_factors(TOP_TERM_COUNT, 1.5)
