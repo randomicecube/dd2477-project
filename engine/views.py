@@ -56,7 +56,7 @@ def list_entries(request):
 
   try:
     # Perform the search
-    response = client.search(index=index_name, body=query)
+    response = client.search(index=index_name, body=query, size=20)
     # Get the entries from the response
     entries = response['hits']['hits']
 
@@ -77,8 +77,9 @@ def log_entry_click(request):
   """
   When a user clicks on an entry (i.e., expands a row), we want to log that event
   """
-  if request.method == 'POST' and request.is_ajax():
+  if request.method == 'POST':
     print("[INFO]: Received click event for entry: ", request.POST.get('entry_id'))
+    print("[INFO]: Clicked category: ", request.POST.get('clicked_category'))
     entry_id = request.POST.get('entry_id')
     
     clicked_category = request.POST.get('clicked_category')

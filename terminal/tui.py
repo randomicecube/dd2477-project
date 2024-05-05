@@ -77,7 +77,7 @@ def main():
         print("[INFO]: Sent query to Elasticsearch: ", query)
 
         # Perform the search
-        response = client.search(index=index_name, body=query)
+        response = client.search(index=index_name, body=query, size=20)
         print_search_results(response)
         view_full_article(response)
         # Log clicked results if any

@@ -51,13 +51,6 @@ table {
   border-collapse: collapse;
 }
 
-.styled-table {
-  /* make the table not be glued to the navbar */
-  margin-top: 7.5vh;
-  width: 70%;
-  overflow-x: hidden !important;
-}
-
 th,
 td {
   border-color: #363633 !important;
@@ -67,6 +60,11 @@ td {
   border-left-color: #47473f !important;
   padding: 10px 20px;
   font-size: 14px;
+}
+
+/* make tr's text white on hover */
+tr:hover {
+  color: white !important;
 }
 
 /* ------ Homepage modal forms ------ */
