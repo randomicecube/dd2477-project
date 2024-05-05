@@ -15,9 +15,10 @@ index_name = "news_articles"
 
 create_index(client, index_name)
 
-# In server mode, we always index the news articles
-index_news_articles(client, index_name, DATA_FILE)
-
+# In server mode, we only call index_news_articles if the index is empty
+response = client.count(index=index_name)
+if response['count'] == 0:
+  index_news_articles(client, index_name, DATA_FILE)
 
 def index(request):
   """
@@ -51,31 +52,41 @@ def list_entries(request):
   # Personalize the query based on user profile
   query = profile.personalize_search(query)
 
-  # Perform the search
-  response = client.search(index=index_name, body=query)
-  # Get the entries from the response
-  entries = response['hits']['hits']
+  print("[INFO]: Sent query to Elasticsearch: ", query)
 
-  save_user_profile(profile)
+  try:
+    # Perform the search
+    response = client.search(index=index_name, body=query)
+    # Get the entries from the response
+    entries = response['hits']['hits']
 
-  # Do something with them -- have the query type into account with regards with the ordering
-  return render(request, 'engine/list-entries.html', {
-    'entries': entries
-  })
+    save_user_profile(profile)
+    print("[INFO]: Received entries from Elasticsearch: ", entries)
+
+    # Do something with them -- have the query type into account with regards with the ordering
+    return render(request, 'engine/list-entries.html', {
+      'entries': entries,
+    })
+  except requests.RequestException as e:
+    print(e)
+    return render(request, 'engine/index.html', {
+      'form': SearchForm(),
+    })
 
 def log_entry_click(request):
   """
   When a user clicks on an entry (i.e., expands a row), we want to log that event
   """
   if request.method == 'POST' and request.is_ajax():
-      entry_id = request.POST.get('entry_id')
-      
-      clicked_category = request.POST.get('clicked_category')
-      username = request.user.username
-      profile = load_user_profile(username)
-      profile.add_click_history(clicked_category)
-      save_user_profile(profile)
-      
-      return JsonResponse({'success': True})
+    print("[INFO]: Received click event for entry: ", request.POST.get('entry_id'))
+    entry_id = request.POST.get('entry_id')
+    
+    clicked_category = request.POST.get('clicked_category')
+    username = request.user.username
+    profile = load_user_profile(username)
+    profile.add_click_history(clicked_category)
+    save_user_profile(profile)
+    
+    return JsonResponse({'success': True})
   else:
-      return JsonResponse({'success': False})
+    return JsonResponse({'success': False})
