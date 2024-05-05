@@ -6,7 +6,6 @@ LENGTH_QUERY = 256
 QUERY_TYPES = [
   ('intersection', 'Intersection'),
   ('phrase', 'Phrase'),
-  ('ranked', 'Ranked')
 ]
 
 # Form used for creating a new paper
