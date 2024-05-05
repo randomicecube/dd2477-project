@@ -37,6 +37,7 @@ class UserProfile:
             # Get top 3 categories based on preference count
             top_categories = sorted(self.category_preferences, key=self.category_preferences.get, reverse=True)[:3]
             # Create boost clauses for these categories
+            # TODO: check if 2 is a good boost value
             category_should_clauses = [{"match": {"category": {"query": cat, "boost": 2}}} for cat in top_categories]
             # Add these clauses to the search query
             query['query']['bool']['should'] += category_should_clauses
@@ -44,8 +45,10 @@ class UserProfile:
         # Boost terms in the search query based on the user's term preferences
         if self.term_preferences:
             # Get top 5 terms based on frequency of use
+            # TODO: check if this is a good strategy for boosting terms
             top_terms = sorted(self.term_preferences, key=self.term_preferences.get, reverse=True)[:5]
             # Create boost clauses for these terms
+            # TODO: check if 1.5 is a good boost value
             term_should_clauses = [{"match": {"headline": {"query": term, "boost": 1.5}}} for term in top_terms]
             # Add these clauses to the search query
             query['query']['bool']['should'] += term_should_clauses
