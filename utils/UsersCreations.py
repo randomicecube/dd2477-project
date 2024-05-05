@@ -1,5 +1,5 @@
-from UserProfile import UserProfile
-from sqlitedb import save_user_profile
+from utils.UserProfile import UserProfile
+from utils.sqlitedb import save_user_profile
 import random
 
 class SimulatedUser:
@@ -28,21 +28,21 @@ class SimulatedUser:
     def generate_random_query(self, category):
         # Define a dictionary of categories and their corresponding terms
         category_terms = {
-            "POLITICS": ["elections", "government policies", "political scandals", "voting rights", "campaign finance", "political corruption", "party politics", "political ideologies", "lobbying", "political activism", "civil rights", "foreign policy"],
-            "WELLNESS": ["healthy living tips", "mental health advice", "fitness trends", "nutrition tips", "stress management techniques", "self-care practices", "mindfulness exercises", "yoga poses", "meditation techniques", "sleep hygiene tips", "dietary supplements", "holistic wellness"],
-            "ENTERTAINMENT": ["celebrity gossip", "movie reviews", "TV show recommendations", "music news", "entertainment industry updates", "celebrity interviews", "film festivals", "award shows", "pop culture trends", "celebrity fashion", "box office reports", "celebrity scandals"],
-            "TRAVEL": ["travel destinations", "travel tips", "budget travel hacks", "solo travel advice", "family vacation ideas", "adventure travel experiences", "cultural immersion", "beach destinations", "city breaks", "road trip suggestions", "ecotourism destinations", "travel photography spots"],
-            "STYLE & BEAUTY": ["fashion trends", "beauty tips", "makeup tutorials", "haircare advice", "skincare routines", "fashion industry news", "celebrity fashion", "styling hacks", "cosmetic product reviews", "DIY beauty treatments", "fashion photography", "makeup artist tips"],
-            "PARENTING": ["parenting advice", "childcare tips", "positive parenting techniques", "family bonding activities", "teen parenting challenges", "newborn care tips", "parenting books", "parenting blogs", "raising teenagers", "single parenting", "parenting hacks", "helicopter parenting"],
-            "HEALTHY LIVING": ["healthy recipes", "exercise routines", "wellness retreats", "clean eating tips", "organic living", "vegan lifestyle advice", "plant-based diets", "natural remedies", "mindful eating", "clean beauty products", "eco-friendly living", "sustainable living tips"],
-            "QUEER VOICES": ["LGBTQ+ rights", "queer representation in media", "gay pride events", "transgender issues", "queer literature", "coming out stories", "gender identity", "queer activism", "queer culture", "homophobia", "queer history", "intersectionality"],
-            "FOOD & DRINK": ["recipes", "restaurant reviews", "food trends", "cooking techniques", "culinary travel experiences", "food photography", "food festivals", "wine tasting", "mixology recipes", "dessert recipes", "healthy eating habits", "food blogging"],
-            "BUSINESS": ["business news", "entrepreneurship advice", "startup success stories", "business strategies", "industry trends", "market analysis", "financial planning", "leadership skills", "workplace productivity tips", "investment opportunities", "business networking events", "global economy updates"],
-            "COMEDY": ["stand-up comedy", "comedy movies", "comedy specials", "improv comedy", "satirical news", "comedy podcasts", "funny memes", "humor writing", "comedy festivals", "sketch comedy", "comedy clubs", "parody videos"],
-            "SPORTS": ["sports news", "game highlights", "athlete interviews", "sports analysis", "team rankings", "sports betting tips", "fantasy sports leagues", "sports documentaries", "sports equipment reviews", "sports science", "sports medicine", "Olympic Games coverage"],
-            "BLACK VOICES": ["racial justice", "Black history", "Black culture", "African American literature", "civil rights movement", "anti-racism activism", "Black-owned businesses", "Black art", "representation in media", "racial equality", "Afrofuturism", "Black identity"],
-            "HOME & LIVING": ["home decor ideas", "interior design tips", "home organization hacks", "DIY home improvement", "gardening advice", "sustainable living tips", "houseplant care", "minimalist living", "smart home technology", "homesteading", "home renovation projects", "feng shui principles"],
-            "PARENTS": ["parenting advice", "childcare tips", "family bonding activities", "teen parenting challenges", "newborn care tips", "positive discipline techniques", "raising teenagers", "parenting blogs", "parenting humor", "single parenting", "parenting hacks", "parenting support groups"]
+            "POLITICS": ["elections", "government policies", "political scandals", "voting rights", "campaign finance", "political corruption", "party politics", "political ideologies", "lobbying", "political activism", "civil rights", "foreign policy", "democrats", "republicans", "GOP", "congress", "senate", "house of representatives", "presidential candidates"],
+            "WELLNESS": ["healthy living tips", "mental health advice", "fitness trends", "nutrition tips", "stress management techniques", "self-care practices", "mindfulness exercises", "yoga poses", "meditation techniques", "sleep hygiene tips", "dietary supplements", "holistic wellness", "yoga", "pilates", "jogging", "running", "mindfulness", "meditation", "nutrition", "diet"],
+            "ENTERTAINMENT": ["celebrity gossip", "movie reviews", "TV show recommendations", "music news", "entertainment industry updates", "celebrity interviews", "film festivals", "award shows", "pop culture trends", "celebrity fashion", "box office reports", "celebrity scandals", "box office", "interview", "gossip", "celebrity", "film", "TV", "music"],
+            "TRAVEL": ["travel destinations", "travel tips", "budget travel hacks", "solo travel advice", "family vacation ideas", "adventure travel experiences", "cultural immersion", "beach destinations", "city breaks", "road trip suggestions", "ecotourism destinations", "travel photography spots", "sustainable travel", "backpacking", "trip", "Los Angeles", "New York", "Paris", "London"],
+            "STYLE & BEAUTY": ["fashion trends", "beauty tips", "makeup tutorials", "haircare advice", "skincare routines", "fashion industry news", "celebrity fashion", "styling hacks", "cosmetic product reviews", "DIY beauty treatments", "fashion photography", "makeup artist tips", "fashion", "acne", "style", "trend"],
+            "PARENTING": ["parenting advice", "childcare tips", "positive parenting techniques", "family bonding activities", "teen parenting challenges", "newborn care tips", "parenting books", "parenting blogs", "raising teenagers", "single parenting", "parenting hacks", "helicopter parenting", "mother", "father", "child", "family", "diapers", "baby"],
+            "HEALTHY LIVING": ["healthy recipes", "exercise routines", "wellness retreats", "clean eating tips", "organic living", "vegan lifestyle advice", "plant-based diets", "natural remedies", "mindful eating", "clean beauty products", "eco-friendly living", "sustainable living tips", "organic food", "vegan", "yoga", "exercise", "diet", "nutrition"],
+            "QUEER VOICES": ["LGBTQ+ rights", "queer representation in media", "gay pride events", "transgender issues", "queer literature", "coming out stories", "gender identity", "queer activism", "queer culture", "homophobia", "queer history", "intersectionality", "LGBTQ", "queer", "protest", "pride", "rights", "news"],
+            "FOOD & DRINK": ["recipes", "restaurant reviews", "food trends", "cooking techniques", "culinary travel experiences", "food photography", "food festivals", "wine tasting", "mixology recipes", "dessert recipes", "healthy eating habits", "food blogging", "recipe", "restaurant", "food", "drink", "cooking"],
+            "BUSINESS": ["business news", "entrepreneurship advice", "startup success stories", "business strategies", "industry trends", "market analysis", "financial planning", "leadership skills", "workplace productivity tips", "investment opportunities", "business networking events", "global economy updates", "business", "entrepreneur", "startup", "investment", "finance"],
+            "COMEDY": ["stand-up comedy", "comedy movies", "comedy specials", "improv comedy", "satirical news", "comedy podcasts", "funny memes", "humor writing", "comedy festivals", "sketch comedy", "comedy clubs", "parody videos", "comedian", "jokes", "funny", "humor", "Comedy Central", "SNL", "stand-up", "Chapelle", "Seinfeld", "C.K."],
+            "SPORTS": ["sports news", "game highlights", "athlete interviews", "sports analysis", "team rankings", "sports betting tips", "fantasy sports leagues", "sports documentaries", "sports equipment reviews", "sports science", "sports medicine", "Olympic Games coverage", "football", "basketball", "soccer", "baseball", "tennis", "golf", "NBA", "NFL", "news", "media", "sports media"],
+            "BLACK VOICES": ["racial justice", "Black history", "Black culture", "African American literature", "civil rights movement", "anti-racism activism", "Black-owned businesses", "Black art", "representation in media", "racial equality", "Afrofuturism", "Black identity", "Black Lives Matter", "racism", "Black", "African American", "history", "culture", "news"],
+            "HOME & LIVING": ["home decor ideas", "interior design tips", "home organization hacks", "DIY home improvement", "gardening advice", "sustainable living tips", "houseplant care", "minimalist living", "smart home technology", "homesteading", "home renovation projects", "feng shui principles", "home", "decor", "design", "DIY", "garden", "sustainable"],
+            "PARENTS": ["parenting advice", "childcare tips", "family bonding activities", "teen parenting challenges", "newborn care tips", "positive discipline techniques", "raising teenagers", "parenting blogs", "parenting humor", "single parenting", "parenting hacks", "parenting support groups", "mother", "father", "child", "family", "parenting"]
         }
 
         # Get the list of terms for the specified category
@@ -71,19 +71,19 @@ class SimulatedUser:
         print(self.profile)
 
 # # Define the number of users and queries per user
-# num_users = 3
-# num_queries_per_user = 20
+num_users = 20
+num_queries_per_user = 1500
 
-# # Simulate users' search behavior
-# simulated_users = []
-# for i in range(num_users):
-#     user = SimulatedUser(user_id=i+1)
-#     user.simulate_search(num_queries_per_user)
-#     simulated_users.append(user)
+# Simulate users' search behavior
+simulated_users = []
+for i in range(num_users):
+    user = SimulatedUser(user_id=i+1)
+    user.simulate_search(num_queries_per_user)
+    simulated_users.append(user)
 
-# # Print profiles
-# for user in simulated_users:
-#     user.print_profile()
+# Print profiles
+for user in simulated_users:
+    user.print_profile()
 
 # Define targeted user preferences
 user1_preferences = ["SPORTS", "HEALTHY LIVING", "ENTERTAINMENT", "TRAVEL"]
@@ -94,7 +94,7 @@ user1 = SimulatedUser(user_id="sportive")
 user2 = SimulatedUser(user_id="activist")
 
 # Simulate search behavior for targeted users
-num_queries_per_user = 75
+num_queries_per_user = 5000
 user1.simulate_search_targeted(num_queries_per_user, user1_preferences)
 user2.simulate_search_targeted(num_queries_per_user, user2_preferences)
 
