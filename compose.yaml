@@ -1,5 +1,3 @@
-version: "3.4"
-  
 services:
   elasticsearch:
     container_name: elasticsearch
