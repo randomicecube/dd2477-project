@@ -60,7 +60,6 @@ def main():
 
     keep_searching = True
     while keep_searching:
-        # TODO: change this to intersection/phrase/ranked
         query_type = input("Enter search type (intersection/phrase): ")
         if query_type not in ['intersection', 'phrase']:
             print("Invalid search type! Please input one of 'intersection', or 'phrase'.")
@@ -74,6 +73,8 @@ def main():
 
         # Personalize the query based on user profile
         query = user_profile.personalize_search(query)
+
+        print("[INFO]: Sent query to Elasticsearch: ", query)
 
         # Perform the search
         response = client.search(index=index_name, body=query)
