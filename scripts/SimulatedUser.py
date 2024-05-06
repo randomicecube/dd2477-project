@@ -73,7 +73,7 @@ class SimulatedUser:
         # modified_query = self.profile.personalize_search(modified_query)
         self.profile.add_search_query(query)
         try:
-            response = client.search(index=index_name, body=modified_query, size=20)
+            response = client.search(index=index_name, body=modified_query)
             entries = response['hits']['hits']
         except requests.RequestException as e:
             print(e)
