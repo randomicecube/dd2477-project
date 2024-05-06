@@ -1,6 +1,10 @@
 from utils.UserProfile import UserProfile
+from utils.search import build_query
 from utils.sqlitedb import save_user_profile
 import random
+import requests
+
+POSSIBLE_SEARCH_TYPES = ["intersection", "phrase"]
 
 class SimulatedUser:
     def __init__(self, user_id):
@@ -51,55 +55,39 @@ class SimulatedUser:
         # Randomly choose a term from the list
         return random.choice(terms)
 
-    def simulate_search(self, num_queries):
+    def simulate_search(self, client, index_name, num_queries):
         for _ in range(num_queries):
             category = random.choices(list(self.categories.keys()), weights=self.categories.values())[0]
             query = self.generate_random_query(category)
-            self.profile.add_search_query(query)
-            self.profile.add_click_history(category)
+            self.make_query(client, index_name, query)
 
-    def simulate_search_targeted(self, num_queries, preferences):
+    def simulate_search_targeted(self, client, index_name, num_queries, preferences):
         for _ in range(num_queries):
-            # category = random.choices(preferences, weights=[self.categories[cat] for cat in preferences])[0]
             category = random.choices(preferences)[0]
             query = self.generate_random_query(category)
-            self.profile.add_search_query(query)
-            self.profile.add_click_history(category)
+            self.make_query(client, index_name, query)
+    
+    # We also need to actually make the query and randomly click on some articles, in order to simulate user behavior
+    def make_query(self, client, index_name, query):
+        modified_query = build_query(random.choice(POSSIBLE_SEARCH_TYPES), query)
+        # modified_query = self.profile.personalize_search(modified_query)
+        self.profile.add_search_query(query)
+        try:
+            response = client.search(index=index_name, body=modified_query, size=20)
+            entries = response['hits']['hits']
+        except requests.RequestException as e:
+            print(e)
+        
+        # Simulate clicking on some articles
+        if entries:
+            num_clicks = random.randint(1, min(5, len(entries)))
+            for _ in range(num_clicks):
+                entry = random.choice(entries)
+                clicked_category = entry['_source']['category']
+                clicked_headline = entry['_source']['headline']
+                clicked_description = entry['_source']['short_description']
+                self.profile.add_click_history(clicked_category, clicked_headline, clicked_description)
 
     def print_profile(self):
         print(f"User Profile for User ID: {self.user_id}")
         print(self.profile)
-
-# # Define the number of users and queries per user
-num_users = 20
-num_queries_per_user = 1500
-
-# Simulate users' search behavior
-simulated_users = []
-for i in range(num_users):
-    user = SimulatedUser(user_id=i+1)
-    user.simulate_search(num_queries_per_user)
-    simulated_users.append(user)
-
-# Print profiles
-for user in simulated_users:
-    user.print_profile()
-
-# Define targeted user preferences
-user1_preferences = ["SPORTS", "HEALTHY LIVING", "ENTERTAINMENT", "TRAVEL"]
-user2_preferences = ["POLITICS", "BLACK VOICES", "QUEER VOICES"]
-
-# Create targeted users
-user1 = SimulatedUser(user_id="sportive")
-user2 = SimulatedUser(user_id="activist")
-
-# Simulate search behavior for targeted users
-num_queries_per_user = 5000
-user1.simulate_search_targeted(num_queries_per_user, user1_preferences)
-user2.simulate_search_targeted(num_queries_per_user, user2_preferences)
-
-# Print profiles for targeted users
-user1.print_profile()
-save_user_profile(user1.profile)
-user2.print_profile()
-save_user_profile(user2.profile)
