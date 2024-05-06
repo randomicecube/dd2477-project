@@ -6,10 +6,11 @@ DD2477 Search Engines &amp; Information Retrieval Systems project (Group 10)
 
 ### Elasticsearch
 
-You can set elastic search enviromemnt following instruction at [elasticsearch-tutorial.md](elasticsearch-tutorial.md).
-It uses docker, so before set the environment of Elasticsearch, please make sure you already install dokcer.
+You can set elastic search environment following instruction at [elasticsearch-tutorial.md](elasticsearch-tutorial.md).
+It uses docker, so before set the environment of Elasticsearch, please make sure you already install docker.
 
 ### Required Environment
+
 - Python: 3.10
 
 ### Required Packages
@@ -21,7 +22,7 @@ It uses docker, so before set the environment of Elasticsearch, please make sure
 
 ## Running things
 
-First things first, to create or recreate the SQLite database, run the `sqlitedb.py` script:
+First things first, to create or recreate the SQLite user profile database, run the `sqlitedb.py` script:
 
 ```bash
 python -m utils.sqlitedb
