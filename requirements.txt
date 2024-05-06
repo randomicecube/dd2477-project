@@ -14,3 +14,4 @@ elasticsearch
 tabulate
 elastic-transport
 python-dotenv
+wordcloud
