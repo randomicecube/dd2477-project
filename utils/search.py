@@ -16,7 +16,14 @@ def build_query(query_type, term):
 
 def search_intersection(terms):
     # Search for an intersection of multiple terms within an index
-    query = QUERY_TEMPLATE
+    query = {
+        "query": {
+            "bool": {
+                "must": [],
+                "should": []
+            }
+        }
+    }
     should_clauses = [
         {
             "bool": {
@@ -34,7 +41,14 @@ def search_intersection(terms):
 
 def search_phrase(phrase):
     # Search for an exact phrase within an index
-    query = QUERY_TEMPLATE
+    query = {
+        "query": {
+            "bool": {
+                "must": [],
+                "should": []
+            }
+        }
+    }
     query['query']['bool']['must'] = [
         {
             "bool": {
