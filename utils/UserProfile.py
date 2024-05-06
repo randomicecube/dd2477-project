@@ -21,14 +21,24 @@ class UserProfile:
                 self.term_preferences[term] = 1  # Set count of the term to 1 if it's a new term
 
     # Method to add a category to the click history and update category preferences
-    def add_click_history(self, category):
+    def add_click_history(self, category, headline, description):
         # Append the category to the click history list
-        self.click_history.append(category)
+        self.click_history.append((category, headline, description))
         # Update the category preferences dictionary with the count of each category
         if category in self.category_preferences:
             self.category_preferences[category] += 1  # Increment count of the category if it already exists
         else:
             self.category_preferences[category] = 1  # Set count of the category to 1 if it's a new category
+
+        # Now, updating the term preferences based on the clicked headline and description
+        # Split the headline and description into individual terms
+        headline_terms = headline.split()
+        description_terms = description.split()
+        # Update the term preferences dictionary with the count of each term
+        for term in headline_terms + description_terms:
+            if term in self.term_preferences:
+                # Not adding by 1, but by a fraction of 1 to avoid overemphasizing the clicked terms
+                self.term_preferences[term] += 0.25
 
     # Method to personalize a search query based on the user's preferences
     def personalize_search(self, query):
