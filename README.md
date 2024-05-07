@@ -20,10 +20,10 @@ It uses docker, so before set the environment of Elasticsearch, please make sure
 3. Activate the virtual environment: `source venv/bin/activate`.
 4. Install the required packages: `pip install -r requirements.txt`.
 
-## Environmet Variables
-these variables should be written in `.env` file or setting by yourselves through terminal.
-- `SECRET_KEY` : ask to the repository creator
-- `ELASTIC_PASSWORD` : You should keep during setting the elasticsearch ([reference](elasticsearch-tutorial.md)).
+## Environment Variables
+These variables should be written in a `.env`/`.envrc` file or setting by yourselves through the terminal.
+- `SECRET_KEY` : ask the repository creator (VERY unsafe!), or [generate one](https://stackoverflow.com/questions/41298963/is-there-a-function-for-generating-settings-secret-key-in-django)
+- `ELASTIC_PASSWORD` : You should acquire this while setting up elasticsearch ([reference](elasticsearch-tutorial.md)).
 
 ## Running things
 
