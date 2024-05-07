@@ -20,6 +20,11 @@ It uses docker, so before set the environment of Elasticsearch, please make sure
 3. Activate the virtual environment: `source venv/bin/activate`.
 4. Install the required packages: `pip install -r requirements.txt`.
 
+## Environmet Variables
+these variables should be written in `.env` file or setting by yourselves through terminal.
+- `SECRET_KEY` : ask to the repository creator
+- `ELASTIC_PASSWORD` : You should keep during setting the elasticsearch ([reference](elasticsearch-tutorial.md)).
+
 ## Running things
 
 First things first, to create or recreate the SQLite user profile database, run the `sqlitedb.py` script:
